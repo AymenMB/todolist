@@ -10,25 +10,26 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
       - name: Build application
-        run: |
-          # Commandes pour compiler ou interpréter le code de votre application
-          # Exemple: npm install ou mvn compile
+        run: mvn clean install
 
   test:
     name: Test
     runs-on: ubuntu-latest
+    needs: [build] # Ce job dépend du job 'build'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      - name: Install dependencies
-        run: |
-          # Commandes pour installer les dépendances nécessaires aux tests
-          # Exemple: npm install --only=dev
-      - name: Run automated tests
-        run: |
-          # Commandes pour exécuter des tests automatisés
-          # Exemple: npm test ou pytest
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+      - name: Run automated tests with Maven
+        run: mvn test
 
   deployment:
     name: Deployment
@@ -37,6 +38,10 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
       - name: Deploy to production
         run: |
           # Commandes pour déployer votre application dans un environnement de production
